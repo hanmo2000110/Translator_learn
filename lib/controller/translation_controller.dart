@@ -47,6 +47,7 @@ class TranslationController extends GetxController {
     }
   }
 
+//fsfasf
   Future<void> getTranslation_papago() async {
     String _client_id = "F7Ie6p98obcphDLwv3xG";
     String _client_secret = "cZxq9zLhJC";

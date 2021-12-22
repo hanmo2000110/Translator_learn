@@ -10,6 +10,9 @@ class TranslationController extends GetxController {
   String language = "";
   String result_papago = "";
   String result_cloud_google = "";
+  String result_kakao = "";
+  String from = 'en';
+  String to = 'ko';
   late GoogleVisionImage visionImage;
   TextRecognizer textRecognizer = GoogleVision.instance.textRecognizer();
   late VisionText visionText;
@@ -41,8 +44,8 @@ class TranslationController extends GetxController {
     if (lan.statusCode == 200) {
       var dataJson = jsonDecode(lan.body);
       language = dataJson['langCode'];
-      print(language);
     } else {
+      print("papago_checklang");
       print(lan.statusCode);
     }
   }
@@ -53,7 +56,7 @@ class TranslationController extends GetxController {
     String _content_type = "application/x-www-form-urlencoded; charset=UTF-8";
     String _url = "https://openapi.naver.com/v1/papago/n2mt";
     await getLanguage_papago();
-    print(text);
+
     http.Response trans = await http.post(
       Uri.parse(_url),
       headers: {
@@ -72,6 +75,7 @@ class TranslationController extends GetxController {
       var dataJson = jsonDecode(trans.body);
       result_papago = dataJson['message']['result']['translatedText'];
     } else {
+      print("papago_trans");
       print(trans.statusCode);
     }
   }
@@ -81,17 +85,48 @@ class TranslationController extends GetxController {
   }
 
   Future<void> getTranslation_google_cloud_translation() async {
-    var _baseUrl = 'translate.googleapis.com';
-    final _path = '/translate_a/single';
+    var _baseUrl = 'https://translation.googleapis.com/language/translate/v2';
+    var key = 'AIzaSyBgQdD1yHaoyBWNqWPoNsEFEZoz2y8kjMw';
+    var response = await http.post(
+      Uri.parse('$_baseUrl?target=$to&key=$key&q=$text'),
+    );
 
-    // var response = await http.post();
+    if (response.statusCode == 200) {
+      var dataJson = jsonDecode(response.body);
+      result_cloud_google =
+          dataJson['data']['translations'][0]['translatedText'];
+    } else {
+      print("google");
+      print(response.statusCode);
+    }
+  }
 
-    // if (response.statusCode == 200) {
-    //   print("");
-    // } else {
-    //   print("");
-    // }
+  Future<void> getTranslation_kakao() async {
+    var _baseUrl = 'https://dapi.kakao.com/v2/translation/translate';
+    var key = '8563a5ffea30b574d2581a94f0d8669e';
+    var too = "kr";
+    var fromm = "en";
+    var response = await http.post(
+      Uri.parse(_baseUrl),
+      headers: ({
+        'Authorization': 'KakaoAK $key',
+        'Content-type': "application/x-www-form-urlencoded; charset=UTF-8",
+      }),
+      body: ({
+        'src_lang': fromm,
+        'target_lang': too,
+        'query': text,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      var dataJson = jsonDecode(response.body);
+      result_kakao = dataJson['translated_text']
+          .toString()
+          .replaceAll('[', '')
+          .replaceAll(']', '');
+    } else {
+      print(response.statusCode);
+    }
   }
 }
-
-// https://cloud.google.com/translate/docs/basic/quickstart#translate_translate_text-nodejs

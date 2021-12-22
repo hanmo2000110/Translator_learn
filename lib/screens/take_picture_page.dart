@@ -64,6 +64,8 @@ class _TakePicturePageState extends State<TakePicturePage> {
             onPressed: () async {
               await tc.getTranslation_papago();
               await tc.getTranslation_googleTranslator();
+              await tc.getTranslation_google_cloud_translation();
+              await tc.getTranslation_kakao();
               Get.toNamed('result');
             },
             child: Text("Next Step"),

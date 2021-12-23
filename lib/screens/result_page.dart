@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_translator/google_translator.dart';
 import 'package:hem_intership/controller/translation_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'home_page.dart';
 
@@ -64,7 +65,41 @@ class _ResultPageState extends State<ResultPage> {
                 height: 10,
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Get.dialog(
+                    Dialog(
+                      child: Container(
+                        height: 200,
+                        width: 100,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Papago\n번역이 제일 좋다!",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    _incrementCounter('papago');
+                                    Get.offAll(HomePage());
+                                  },
+                                  child: Text("투표하기")),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
                 child: Container(
                   width: Get.width - 50,
                   decoration: BoxDecoration(
@@ -79,6 +114,7 @@ class _ResultPageState extends State<ResultPage> {
                       Text(
                         "Papago",
                         style: TextStyle(
+                          color: Colors.green,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -104,7 +140,41 @@ class _ResultPageState extends State<ResultPage> {
                 height: 20,
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Get.dialog(
+                    Dialog(
+                      child: Container(
+                        height: 200,
+                        width: 100,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Google Translator\n번역이 제일 좋다!",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    _incrementCounter('google');
+                                    Get.offAll(HomePage());
+                                  },
+                                  child: Text("투표하기")),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
                 child: Container(
                   width: Get.width - 50,
                   decoration: BoxDecoration(
@@ -145,7 +215,41 @@ class _ResultPageState extends State<ResultPage> {
                 height: 20,
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Get.dialog(
+                    Dialog(
+                      child: Container(
+                        height: 200,
+                        width: 100,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Google Cloud Translate\n번역이 제일 좋다!",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.blue[600],
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    _incrementCounter('cloud');
+                                    Get.offAll(HomePage());
+                                  },
+                                  child: Text("투표하기")),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
                 child: Container(
                   width: Get.width - 50,
                   decoration: BoxDecoration(
@@ -160,6 +264,7 @@ class _ResultPageState extends State<ResultPage> {
                       Text(
                         "Google Cloud Translate",
                         style: TextStyle(
+                          color: Colors.blue.shade600,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -186,7 +291,41 @@ class _ResultPageState extends State<ResultPage> {
                 height: 20,
               ),
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Get.dialog(
+                    Dialog(
+                      child: Container(
+                        height: 200,
+                        width: 100,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Kakao i Translate\n번역이 제일 좋다!",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.yellow.shade600,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    _incrementCounter('kakao');
+                                    Get.offAll(HomePage());
+                                  },
+                                  child: Text("투표하기")),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
                 child: Container(
                   width: Get.width - 50,
                   decoration: BoxDecoration(
@@ -201,6 +340,7 @@ class _ResultPageState extends State<ResultPage> {
                       Text(
                         "Kakao i Translate",
                         style: TextStyle(
+                          color: Colors.yellow[600],
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -224,12 +364,19 @@ class _ResultPageState extends State<ResultPage> {
                 ),
               ),
               SizedBox(
-                height: 200,
+                height: 40,
               ),
             ],
           ),
         ],
       ),
     );
+  }
+
+  _incrementCounter(String name) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int counter = (prefs.getInt(name) ?? 1) + 1;
+    print('Pressed $counter times.');
+    await prefs.setInt(name, counter);
   }
 }

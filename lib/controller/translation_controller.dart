@@ -77,6 +77,7 @@ class TranslationController extends GetxController {
     } else {
       print("papago_trans");
       print(trans.statusCode);
+      result_papago = text;
     }
   }
 
